@@ -1,0 +1,5 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# CodeStream ignored files
+/../../translator_tests_lilprj\.idea/codestream.xml
