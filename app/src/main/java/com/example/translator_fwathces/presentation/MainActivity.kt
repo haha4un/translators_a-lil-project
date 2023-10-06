@@ -13,6 +13,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -85,15 +87,57 @@ fun Greeting(greetingName: String) {
                 Text(text = "\uD83C\uDFA4",)
             }
 
+            Spacer(modifier = Modifier.height(5.dp))
+
             BasicTextField(modifier = Modifier
                 .fillMaxWidth()
-                .height(75.dp)
-                .padding(0.dp, 5.dp, 0.dp, 0.dp)
+                .height(50.dp)
                 .align(alignment = Alignment.CenterHorizontally)
                 .background(color = Color(0xFF2F2F2F), shape = RoundedCornerShape(size = 0.dp)),
                 value = org_t, onValueChange = {text -> org_t = text}, textStyle = TextStyle(
                     color = Color.White,
                     textAlign = TextAlign.Center))
+
+            Row(modifier = Modifier
+                .align(alignment = Alignment.CenterHorizontally)) {
+                Text(
+                    text = "🇷🇺",
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        color = Color(0xFF000000),
+                    ))
+                Text(
+                    modifier = Modifier
+                        .padding(5.dp, 0.dp, 5.dp, 0.dp),
+                    text = "->",
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        color = Color(0xFFF7F7F7),))
+                Text(
+                    text = "🇬🇧",
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        color = Color(0xFF000000),))
+            }
+
+            BasicTextField(modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+                .align(alignment = Alignment.CenterHorizontally)
+                .background(color = Color(0xFF2F2F2F), shape = RoundedCornerShape(size = 0.dp)),
+                value = org_t, onValueChange = {text -> org_t = text}, textStyle = TextStyle(
+                    color = Color.White,
+                    textAlign = TextAlign.Center))
+
+            Spacer(modifier = Modifier.height(5.dp))
+
+            Button(modifier = Modifier
+                .fillMaxWidth()
+                .height(30.dp)
+                .background(color = Color(0xFF2F2F2F)),
+                onClick = { /*TODO*/ }) {
+                Text(text = "\uD83D\uDD0A",)
+            }
         //
     }
 
