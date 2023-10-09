@@ -6,11 +6,20 @@
 
 package com.example.translator_fwathces.presentation
 
+import android.content.Intent
 import android.os.Bundle
+import android.speech.RecognizerIntent
+import android.speech.tts.TextToSpeech
+import android.util.Log
+import android.view.View
 import android.webkit.URLUtil
+import android.widget.Button
+import android.widget.EditText
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.Nullable
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -45,14 +54,45 @@ import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import com.example.translator_fwathces.R
 import com.example.translator_fwathces.presentation.theme.Translator_fwathcesTheme
+import java.util.Locale
 
 class MainActivity : ComponentActivity() {
+    private var tts: TextToSpeech? = null
+    private var orgtext: EditText? = null
+    private var tospeak: Button? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             WearApp("Android")
         }
     }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, @Nullable data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK && data != null) {
+            when (requestCode) {
+                10 -> {
+                    val text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                    var pre_text = "${orgtext!!.text.toString()}"
+                    pre_text+=text!![0] +".  "
+                    orgtext!!.setText(pre_text)
+                }
+            }
+        }
+    }
+    private fun speakOut() {
+        val text = orgtext!!.text.toString()
+        tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null,"")
+    }
+
+    public override fun onDestroy() {
+        // Shutdown TTS
+        if (tts != null) {
+            tts!!.stop()
+            tts!!.shutdown()
+        }
+        super.onDestroy()
+    }
+
 }
 
 @Composable
@@ -64,20 +104,23 @@ fun WearApp(greetingName: String) {
                 .background(MaterialTheme.colors.background),
             verticalArrangement = Arrangement.Center
         ) {
-            Greeting(greetingName = greetingName)
+            maingtid()
         }
     }
 }
 
 @Composable
-fun Greeting(greetingName: String) {
+fun maingtid() {
     var org_t by remember {
+        mutableStateOf("")
+    }
+    var trs_t by remember {
         mutableStateOf("")
     }
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFD9D9D9))){
+            .background(Color(0xFFF7F7F7))){
         //
             Button(modifier = Modifier
                 .fillMaxWidth()
@@ -93,13 +136,14 @@ fun Greeting(greetingName: String) {
                 .fillMaxWidth()
                 .height(50.dp)
                 .align(alignment = Alignment.CenterHorizontally)
-                .background(color = Color(0xFF2F2F2F), shape = RoundedCornerShape(size = 0.dp)),
+                .border(width = 3.dp, color = Color(0xFF8D8D8D))
+                .background(color = Color(0xFFF7F7F7)),
                 value = org_t, onValueChange = {text -> org_t = text}, textStyle = TextStyle(
                     color = Color.White,
                     textAlign = TextAlign.Center))
 
             Row(modifier = Modifier
-                .align(alignment = Alignment.CenterHorizontally)) {
+                .align(alignment = Alignment.CenterHorizontally,)) {
                 Text(
                     text = "🇷🇺",
                     style = TextStyle(
@@ -124,7 +168,8 @@ fun Greeting(greetingName: String) {
                 .fillMaxWidth()
                 .height(50.dp)
                 .align(alignment = Alignment.CenterHorizontally)
-                .background(color = Color(0xFF2F2F2F), shape = RoundedCornerShape(size = 0.dp)),
+                .border(width = 3.dp, color = Color(0xFF8D8D8D))
+                .background(color = Color(0xFFF7F7F7), shape = RoundedCornerShape(size = 0.dp)),
                 value = org_t, onValueChange = {text -> org_t = text}, textStyle = TextStyle(
                     color = Color.White,
                     textAlign = TextAlign.Center))
@@ -140,7 +185,6 @@ fun Greeting(greetingName: String) {
             }
         //
     }
-
 }
 
 @Preview(device = Devices.WEAR_OS_SMALL_ROUND, showSystemUi = true)
@@ -148,3 +192,4 @@ fun Greeting(greetingName: String) {
 fun DefaultPreview() {
     WearApp("Preview Android")
 }
+
