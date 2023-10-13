@@ -9,8 +9,15 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.firebase.ml.naturallanguage.FirebaseNaturalLanguage
+import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslateLanguage
+import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslator
+import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslatorOptions
 import java.util.Locale
 
 
@@ -22,6 +29,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var translatedtext: TextView? = null
     private var flagf: TextView? = null
     private var flags: TextView? = null
+    var rus_eng: FirebaseTranslator? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +45,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         tospeak!!.isEnabled = true
 
-        // TextToSpeech(Context: this, OnInitListener: this)
+
         tts = TextToSpeech(this, this)
 
         tospeak!!.setOnClickListener { speakOut() }
@@ -49,6 +57,33 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             )
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
             startActivityForResult(intent, 10) }
+
+        translatedtext!!.setOnClickListener { translateLanguage(orgtext!!.text.toString()) }
+
+
+        val options =
+            FirebaseTranslatorOptions.Builder()
+                .setSourceLanguage(FirebaseTranslateLanguage.EN)
+                .setTargetLanguage(FirebaseTranslateLanguage.RU)
+                .build()
+
+        rus_eng = FirebaseNaturalLanguage.getInstance().getTranslator(options);
+
+        rus_eng!!.downloadModelIfNeeded()
+            .addOnSuccessListener {}
+            .addOnFailureListener { exception -> Toast.makeText(this, "$exception", Toast.LENGTH_SHORT).show()}
+    }
+    private fun translateLanguage(input: String) {
+        rus_eng!!.translate(input)
+            .addOnSuccessListener(OnSuccessListener<String?> { s -> translatedtext!!.text = s })
+            .addOnFailureListener(
+                OnFailureListener {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Fail to translate",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, @Nullable data: Intent?) {
@@ -66,7 +101,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     override fun onInit(status: Int) {
-
         if (status == TextToSpeech.SUCCESS) {
             // set US English as language for tts
             val result = tts!!.setLanguage(Locale.ROOT)
@@ -104,9 +138,22 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         flagf!!.text = flags!!.text.toString()
         flags!!.text = dump
         dump = ""
-
         dump = orgtext!!.text.toString()
         orgtext!!.setText(translatedtext!!.text.toString())
         translatedtext!!.text = dump
+
+        var options = FirebaseTranslatorOptions.Builder()
+            .setSourceLanguage(FirebaseTranslateLanguage.EN)
+            .setTargetLanguage(FirebaseTranslateLanguage.RU)
+            .build()
+        if (dump != "\uD83C\uDDEC\uD83C\uDDE7")
+        {
+             options =
+                FirebaseTranslatorOptions.Builder()
+                    .setSourceLanguage(FirebaseTranslateLanguage.RU)
+                    .setTargetLanguage(FirebaseTranslateLanguage.EN)
+                    .build()
+        }
+        rus_eng = FirebaseNaturalLanguage.getInstance().getTranslator(options);
     }
 }
