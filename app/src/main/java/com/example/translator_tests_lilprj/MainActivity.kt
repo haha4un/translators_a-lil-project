@@ -156,4 +156,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
         rus_eng = FirebaseNaturalLanguage.getInstance().getTranslator(options);
     }
+
+    fun cleartext(view: View){
+        orgtext!!.setText("")
+    }
 }
