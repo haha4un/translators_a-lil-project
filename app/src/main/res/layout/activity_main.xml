@@ -19,6 +19,25 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+            <ImageButton
+                android:id="@+id/say_it"
+                android:layout_width="match_parent"
+                android:layout_height="60sp"
+                android:background="@drawable/recd" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="30sp"
+                android:text="🔊"/>
+        </FrameLayout>
+
         <EditText
             android:layout_width="match_parent"
             android:id="@+id/original_text"
@@ -74,9 +93,10 @@
         <TextView
             android:id="@+id/translated_text"
             android:layout_width="match_parent"
-            android:layout_height="200sp"
+            android:layout_height="160sp"
             android:layout_marginStart="30sp"
             android:layout_marginEnd="30sp"
+            android:layout_marginBottom="40sp"
             android:background="@drawable/bordrr"
             android:gravity="center"
             android:text="Здесь будет перевод (клянусь!)"
@@ -84,28 +104,23 @@
             android:textSize="20sp" />
 
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:id="@+id/hostofbtns"
-            android:layout_gravity="center"
-            app:layout_constraintTop_toBottomOf="@id/main_cmp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/say_it"
-                android:text="🔊"/>
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            android:layout_gravity="center">
+            <ImageButton
                 android:id="@+id/listent_to"
+                android:layout_width="match_parent"
+                android:layout_height="60sp"
+                android:background="@drawable/recu" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="30sp"
                 android:text="🎤"/>
-        </LinearLayout>
+        </FrameLayout>
     </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

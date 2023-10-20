@@ -8,6 +8,8 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.Nullable
@@ -23,9 +25,9 @@ import java.util.Locale
 
 class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var tts: TextToSpeech? = null
-    private var tospeak: Button? = null
+    private var tospeak: ImageButton? = null
     private var orgtext: EditText? = null
-    private var listento: Button? = null
+    private var listento: ImageButton? = null
     private var translatedtext: TextView? = null
     private var flagf: TextView? = null
     private var flags: TextView? = null
@@ -142,13 +144,17 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         orgtext!!.setText(translatedtext!!.text.toString())
         translatedtext!!.text = dump
 
-        var options = FirebaseTranslatorOptions.Builder()
-            .setSourceLanguage(FirebaseTranslateLanguage.EN)
-            .setTargetLanguage(FirebaseTranslateLanguage.RU)
-            .build()
-        if (dump != "\uD83C\uDDEC\uD83C\uDDE7")
+        var options: FirebaseTranslatorOptions
+        if (flagf!!.text == "\uD83C\uDDEC\uD83C\uDDE7")
         {
              options =
+                FirebaseTranslatorOptions.Builder()
+                    .setSourceLanguage(FirebaseTranslateLanguage.EN)
+                    .setTargetLanguage(FirebaseTranslateLanguage.RU)
+                    .build()
+        }
+        else{
+            options =
                 FirebaseTranslatorOptions.Builder()
                     .setSourceLanguage(FirebaseTranslateLanguage.RU)
                     .setTargetLanguage(FirebaseTranslateLanguage.EN)
